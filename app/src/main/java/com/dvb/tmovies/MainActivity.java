@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         if (isNetworkAvailable()) {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url(siteUrl)
+                    .url(popularMovieRequestUrl)
                     .build();
 
             Call call = client.newCall(request);
