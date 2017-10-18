@@ -1,15 +1,13 @@
 package com.dvb.tmovies;
 
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Movie;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.squareup.okhttp.Call;
@@ -23,14 +21,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-import static android.R.attr.data;
+import static android.R.attr.apiKey;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private PopularMovie[] mPopularMovie;
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager mLayoutManager;
+
+
+    private PopMovie[] mPopMovie;
 
 
     @Override
@@ -38,7 +42,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String apiKey = "?api_key=";
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+
+        String apiKey = "?api_key=957c988676c0d274a6d1cc76dd5c8a93";
         String siteUrl = "https://api.themoviedb.org/3/movie/";
         String sortBy = "popular";
         String movie_id = "565";
@@ -66,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.v(TAG, jsonData);
 
                         if (response.isSuccessful()) {
-                            mPopularMovie = getMovieData(jsonData);
+                            mPopMovie = getMovieData(jsonData);
                         } else {
                             alertUserAboutError();
                         }
@@ -89,15 +96,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    private PopularMovie[] getMovieData(String jsonData) throws JSONException {
+    private PopMovie[] getMovieData(String jsonData) throws JSONException {
         JSONObject movie = new JSONObject(jsonData);
         JSONArray movieResults = movie.getJSONArray("results");
 
-        PopularMovie[] movies = new PopularMovie[movieResults.lenght()];
+        PopMovie[] movies = new PopMovie[movieResults.length()];
 
         for (int i = 0; i < movieResults.length(); i++){
             JSONObject jsonMovie = movieResults.getJSONObject(i);
-            PopularMovie aMovie = new PopularMovie();
+            PopMovie aMovie = new PopMovie();
 
             aMovie.setPoster_path(jsonMovie.getString("poster_path"));
             aMovie.setTitle(jsonMovie.getString("title"));

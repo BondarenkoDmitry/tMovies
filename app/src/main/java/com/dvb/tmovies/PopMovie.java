@@ -4,10 +4,15 @@ package com.dvb.tmovies;
  * Created by dmitrybondarenko on 05.10.17.
  */
 
-public class PopularMovie {
+public class PopMovie {
 
     private String title;
     private String poster_path;
+
+    public PopMovie(){
+        this.setTitle(title);
+        this.setPoster_path(poster_path);
+    }
 
 
     public String getTitle() {
