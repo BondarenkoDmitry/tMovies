@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.R.attr.apiKey;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private PopMovie[] mPopMovie;
-
+    private ArrayList<PopMovie> mPopMovies = new ArrayList<PopMovie>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
 
 
         String apiKey = "?api_key=957c988676c0d274a6d1cc76dd5c8a93";
@@ -91,6 +94,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d(TAG, "Main UI code is running!");
+
+        mAdapter = new PopMovieAdapter(mPopMovies);
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
     }
 
