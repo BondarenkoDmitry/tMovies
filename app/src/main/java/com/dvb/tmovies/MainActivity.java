@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
@@ -35,9 +36,28 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
 
+//    In your main activity you are calling mPopMovie
+//    mPopMovie is array of movies
+//    mPopMovie = getMovieData(jsonData);
 
+//    and for adapter your are usnig Arraylist
+//    mPopMovies is array list
+//    mAdapter = new PopMovieAdapter(mPopMovies);
+//    that is the reson your list is empty
+//    use Arraylist insted of simple list
+//    =====
+//    was wrong only use arraylist no need of object of array
+//    mPopMovies(--Arraylist--) = getMovieData(jsonData);
+//    getmoviedata() method return type must be ArrayList
+
+
+    // Object of array, I'm getting data here
     private PopMovie[] mPopMovie;
-    private ArrayList<PopMovie> mPopMovies = new ArrayList<PopMovie>();
+
+    // ArrayList, I'm using it for adapter
+    private ArrayList<PopMovie> mPopMovies = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         String sortBy = "popular";
         String movie_id = "565";
 
-        final String movieIdRequestUrl = siteUrl + movie_id + apiKey;
         final String popularMovieRequestUrl = siteUrl + sortBy + apiKey;
 
         if (isNetworkAvailable()) {
@@ -95,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Main UI code is running!");
 
+
+
         mAdapter = new PopMovieAdapter(mPopMovies);
         mRecyclerView.setHasFixedSize(true);
 
@@ -106,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     private PopMovie[] getMovieData(String jsonData) throws JSONException {
         JSONObject movie = new JSONObject(jsonData);
         JSONArray movieResults = movie.getJSONArray("results");
@@ -114,14 +136,12 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < movieResults.length(); i++){
             JSONObject jsonMovie = movieResults.getJSONObject(i);
-            PopMovie aMovie = new PopMovie();
 
-            aMovie.setPoster_path(jsonMovie.getString("poster_path"));
-            aMovie.setTitle(jsonMovie.getString("title"));
+            mPopMovies.add(new PopMovie(
+                    jsonMovie.getString("title").toString(),
+                    jsonMovie.getString("poster_path").toString()));
 
-            movies[i] = aMovie;
         }
-
         return movies;
     }
 
