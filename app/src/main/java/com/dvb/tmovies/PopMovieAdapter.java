@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.dvb.tmovies.transformation.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 /**
@@ -45,16 +43,16 @@ public class PopMovieAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         PopMovie popMovie = mPopMovies.get(position);
 
-        holder.film_name.setText(popMovie.getTitle());
+        holder.title.setText(popMovie.getTitle());
 
         Picasso.with(context)
                 .load("https://image.tmdb.org/t/p/w185" + popMovie.getPoster_path())
                 .transform(new RoundedTransformation(20, 5))
                 .error(R.drawable.aaa)
-                .into(holder.mImageView);
+                .into(holder.poster_path);
 
         Typeface latoBlack = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Black.ttf");
-        holder.film_name.setTypeface(latoBlack);
+        holder.title.setTypeface(latoBlack);
     }
 
     @Override
@@ -67,14 +65,14 @@ public class PopMovieAdapter extends RecyclerView.Adapter
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView mImageView;
-        TextView film_name;
+        ImageView poster_path;
+        TextView title;
 
         public RecyclerViewHolder(View view){
             super(view);
 
-            mImageView = (ImageView)view.findViewById(R.id.img);
-            film_name = (TextView)view.findViewById(R.id.f_name);
+            poster_path = (ImageView)view.findViewById(R.id.img);
+            title = (TextView)view.findViewById(R.id.f_name);
 
         }
 

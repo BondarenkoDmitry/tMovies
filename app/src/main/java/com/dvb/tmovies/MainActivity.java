@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
 //    mPopMovies(--Arraylist--) = getMovieData(jsonData);
 //    getmoviedata() method return type must be ArrayList
 
-
     // Object of array, I'm getting data here
     private PopMovie[] mPopMovie;
 
@@ -129,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private PopMovie[] getMovieData(String jsonData) throws JSONException {
+
         JSONObject movie = new JSONObject(jsonData);
         JSONArray movieResults = movie.getJSONArray("results");
 
@@ -136,12 +136,14 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < movieResults.length(); i++){
             JSONObject jsonMovie = movieResults.getJSONObject(i);
+            PopMovie aMovie = new PopMovie();
 
-            mPopMovies.add(new PopMovie(
-                    jsonMovie.getString("title").toString(),
-                    jsonMovie.getString("poster_path").toString()));
+            aMovie.setTitle(jsonMovie.getString("title"));
+            aMovie.setPoster_path(jsonMovie.getString("poster_path"));
 
+            movies[i] = aMovie;
         }
+
         return movies;
     }
 
@@ -163,3 +165,13 @@ public class MainActivity extends AppCompatActivity {
         dialog.show(getFragmentManager(), "error_dialog");
     }
 }
+
+
+
+
+
+
+
+
+
+
