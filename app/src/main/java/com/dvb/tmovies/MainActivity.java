@@ -1,13 +1,11 @@
 package com.dvb.tmovies;
 
 import android.content.Context;
-import android.graphics.Movie;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,10 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import static android.R.attr.apiKey;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,25 +31,9 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
 
-//    In your main activity you are calling mPopMovie
-//    mPopMovie is array of movies
-//    mPopMovie = getMovieData(jsonData);
-
-//    and for adapter your are usnig Arraylist
-//    mPopMovies is array list
-//    mAdapter = new PopMovieAdapter(mPopMovies);
-//    that is the reson your list is empty
-//    use Arraylist insted of simple list
-//    =====
-//    was wrong only use arraylist no need of object of array
-//    mPopMovies(--Arraylist--) = getMovieData(jsonData);
-//    getmoviedata() method return type must be ArrayList
-
-    // Object of array, I'm getting data here
-    private PopMovie[] mPopMovie;
 
     // ArrayList, I'm using it for adapter
-    private ArrayList<PopMovie> mPopMovies = new ArrayList<>();
+    private ArrayList<Movie> mPopMovies = new ArrayList<>();
 
 
 
@@ -70,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         String apiKey = "?api_key=957c988676c0d274a6d1cc76dd5c8a93";
         String siteUrl = "https://api.themoviedb.org/3/movie/";
         String sortBy = "popular";
-        String movie_id = "565";
 
         final String popularMovieRequestUrl = siteUrl + sortBy + apiKey;
 
@@ -94,7 +72,11 @@ public class MainActivity extends AppCompatActivity {
                         Log.v(TAG, jsonData);
 
                         if (response.isSuccessful()) {
-                            mPopMovie = getMovieData(jsonData);
+                            getMovieData(jsonData);
+
+//                            mAdapterNotifyDataChange
+//                            update data
+
                         } else {
                             alertUserAboutError();
                         }
@@ -114,37 +96,32 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Main UI code is running!");
 
 
-
-        mAdapter = new PopMovieAdapter(mPopMovies);
+//        notifydataChange
+        mAdapter = new MovieAdapter(mPopMovies);
         mRecyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
     }
 
 
 
 
-    private PopMovie[] getMovieData(String jsonData) throws JSONException {
+    private void getMovieData(String jsonData) throws JSONException {
 
         JSONObject movie = new JSONObject(jsonData);
         JSONArray movieResults = movie.getJSONArray("results");
 
-        PopMovie[] movies = new PopMovie[movieResults.length()];
 
         for (int i = 0; i < movieResults.length(); i++){
             JSONObject jsonMovie = movieResults.getJSONObject(i);
-            PopMovie aMovie = new PopMovie();
 
-            aMovie.setTitle(jsonMovie.getString("title"));
-            aMovie.setPoster_path(jsonMovie.getString("poster_path"));
+            mPopMovies.add(new Movie(
+                    jsonMovie.getString("title").toString(),
+                    jsonMovie.getString("poster_path").toString()));
 
-            movies[i] = aMovie;
         }
-
-        return movies;
     }
 
 
@@ -165,9 +142,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show(getFragmentManager(), "error_dialog");
     }
 }
-
-
-
 
 
 

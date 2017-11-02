@@ -18,15 +18,27 @@ import java.util.ArrayList;
  * Created by dmitrybondarenko on 11.10.17.
  */
 
-public class PopMovieAdapter extends RecyclerView.Adapter
-        <PopMovieAdapter.RecyclerViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter
+        <MovieAdapter.RecyclerViewHolder> {
 
     private Context context;
-    private ArrayList<PopMovie> mPopMovies = new ArrayList<PopMovie>();
+    private ArrayList<Movie> mPopMovies = new ArrayList<Movie>();
 
-    public PopMovieAdapter(ArrayList<PopMovie> arrayList){
+
+//    Maybe a bit later I'll fetch data directly from here.
+    public MovieAdapter(ArrayList<Movie> arrayList){
         this.mPopMovies = arrayList;
     }
+
+    public ArrayList<Movie> getPopMovies() {
+        return mPopMovies;
+    }
+
+    public void setPopMovies(ArrayList<Movie> popMovies) {
+        mPopMovies = popMovies;
+    }
+
+
 
 
 
@@ -41,7 +53,7 @@ public class PopMovieAdapter extends RecyclerView.Adapter
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        PopMovie popMovie = mPopMovies.get(position);
+        Movie popMovie = mPopMovies.get(position);
 
         holder.title.setText(popMovie.getTitle());
 
