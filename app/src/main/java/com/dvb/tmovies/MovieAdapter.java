@@ -24,8 +24,7 @@ public class MovieAdapter extends RecyclerView.Adapter
     private Context context;
     private ArrayList<Movie> mPopMovies = new ArrayList<Movie>();
 
-
-//    Maybe a bit later I'll fetch data directly from here.
+    //    Maybe a bit later I'll fetch data directly from here.
     public MovieAdapter(ArrayList<Movie> arrayList){
         this.mPopMovies = arrayList;
     }
@@ -37,10 +36,6 @@ public class MovieAdapter extends RecyclerView.Adapter
     public void setPopMovies(ArrayList<Movie> popMovies) {
         mPopMovies = popMovies;
     }
-
-
-
-
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,14 +52,17 @@ public class MovieAdapter extends RecyclerView.Adapter
 
         holder.title.setText(popMovie.getTitle());
 
-        Picasso.with(context)
+        // Pass the context that can be retrieved from itemview
+        Picasso.with(holder.itemView.getContext())
                 .load("https://image.tmdb.org/t/p/w185" + popMovie.getPoster_path())
                 .transform(new RoundedTransformation(20, 5))
-                .error(R.drawable.aaa)
+                // TODO aaa resource doesn't exist, I replaced it with launcher image in case of error
+                .error(R.mipmap.ic_launcher)
                 .into(holder.poster_path);
 
-        Typeface latoBlack = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Black.ttf");
-        holder.title.setTypeface(latoBlack);
+        /* FIXME Assets should be pushed to GIT, this crashes on my side
+        Typeface latoBlack = Typeface.createFromAsset(holder.itemView.getContext().getAssets(), "fonts/Lato-Black.ttf");
+        holder.title.setTypeface(latoBlack);*/
     }
 
     @Override

@@ -31,21 +31,23 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
 
-
     // ArrayList, I'm using it for adapter
     private ArrayList<Movie> mPopMovies = new ArrayList<>();
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mAdapter = new MovieAdapter(mPopMovies);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
-
-
+        // Fetch the data
         String apiKey = "?api_key=957c988676c0d274a6d1cc76dd5c8a93";
         String siteUrl = "https://api.themoviedb.org/3/movie/";
         String sortBy = "popular";
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-
+                    Log.e("MainActivity", "Failed to fetch data.", e);
                 }
 
                 @Override
@@ -74,8 +76,14 @@ public class MainActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             getMovieData(jsonData);
 
-//                            mAdapterNotifyDataChange
-//                            update data
+                            // Once the data fetched adapter should be notified
+                            // Should be done on UI Thread
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            });
 
                         } else {
                             alertUserAboutError();
@@ -92,17 +100,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.network_unavailable_message),
                     Toast.LENGTH_LONG).show();
         }
-
-        Log.d(TAG, "Main UI code is running!");
-
-
-//        notifydataChange
-        mAdapter = new MovieAdapter(mPopMovies);
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
 
